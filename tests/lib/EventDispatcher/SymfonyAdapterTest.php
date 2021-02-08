@@ -100,6 +100,27 @@ class SymfonyAdapterTest extends TestCase {
 		self::assertEquals($result, $wrapped);
 	}
 
+	public function testDispatchOldSymfonyEventWithFlippedArgumentOrder(): void {
+		$this->markTestSkipped('todo');
+
+		$event = new SymfonyEvent();
+		$eventName = 'symfony';
+		$symfonyDispatcher = $this->createMock(SymfonyDispatcher::class);
+		$this->eventDispatcher->expects(self::once())
+			->method('getSymfonyDispatcher')
+			->willReturn($symfonyDispatcher);
+		$symfonyDispatcher->expects(self::once())
+			->method('dispatch')
+			->with(
+				$eventName,
+				$event
+			);
+
+		$result = $this->adapter->dispatch($eventName, $event);
+
+		self::assertSame($result, $event);
+	}
+
 	public function testDispatchOldSymfonyEvent(): void {
 		$event = new SymfonyEvent();
 		$eventName = 'symfony';
@@ -114,6 +135,24 @@ class SymfonyAdapterTest extends TestCase {
 				$eventName
 			)
 			->willReturnArgument(0);
+
+		$result = $this->adapter->dispatch($eventName, $event);
+
+		self::assertSame($result, $event);
+	}
+
+	public function testDispatchCustomGenericEventWithFlippedArgumentOrder(): void {
+		$this->markTestSkipped('todo');
+
+		$event = new GenericEvent();
+		$eventName = 'symfony';
+		$this->eventDispatcher->expects(self::once())
+			->method('dispatch')
+			->with(
+				$eventName,
+				$event
+			)
+			->willReturnArgument(1);
 
 		$result = $this->adapter->dispatch($eventName, $event);
 

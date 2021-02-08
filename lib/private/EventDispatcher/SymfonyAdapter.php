@@ -68,6 +68,10 @@ class SymfonyAdapter implements EventDispatcherInterface {
 	 */
 	public function dispatch($eventName, $event = null): object {
 		// type hinting is not possible, due to usage of GenericEvent
+		if ($event instanceof Event && $eventName === null) {
+			$this->eventDispatcher->dispatchTyped($event);
+			return $event;
+		}
 		if ($event instanceof Event) {
 			$this->eventDispatcher->dispatch($eventName, $event);
 			return $event;
